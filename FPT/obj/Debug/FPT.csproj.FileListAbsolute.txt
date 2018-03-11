@@ -1,0 +1,6 @@
+C:\FPT\FPT\bin\Debug\FPT.exe.config
+C:\FPT\FPT\obj\Debug\FPT.csprojResolveAssemblyReference.cache
+C:\FPT\FPT\bin\Debug\FPT.exe
+C:\FPT\FPT\bin\Debug\FPT.pdb
+C:\FPT\FPT\obj\Debug\FPT.exe
+C:\FPT\FPT\obj\Debug\FPT.pdb
