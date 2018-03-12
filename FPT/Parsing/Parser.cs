@@ -82,8 +82,8 @@ namespace FPT.Parsing
         {
             CreateNewMatchCondition();
 
-            if (IsObject(_lookAheadFirst))
-            {
+            //if (IsObject(_lookAheadFirst))
+            //{
                 if (IsEqualityOperator(_lookAheadSecond))
                 {
                     EqualityMatchCondition();
@@ -102,11 +102,11 @@ namespace FPT.Parsing
                 }
 
                 MatchConditionNext();
-            }
-            else
-            {
-                throw new System.Exception();
-            }
+            //}
+            //else
+            //{
+            //    throw new System.Exception();
+            //}
         }
 
         private void EqualityMatchCondition()
@@ -210,8 +210,8 @@ namespace FPT.Parsing
                 AndMatchCondition();
             else if (_lookAheadFirst.tokenType == TokenType.Or)
                 OrMatchCondition();
-            else if (_lookAheadFirst.tokenType == TokenType.Between)
-                DateCondition();
+            //else if (_lookAheadFirst.tokenType == TokenType.Between)
+            //    DateCondition();
             else
                 throw new System.Exception();
         }
