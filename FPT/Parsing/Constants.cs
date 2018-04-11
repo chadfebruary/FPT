@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FPT
+namespace FPT.Parsing
 {
-    class Program
+    class Constants
     {
-        static void Main(string[] args)
-        {
-
-        }
+        public string END_STATEMENT = ";";
     }
 }

@@ -47,6 +47,7 @@
     <Compile Include="DataRepresentation\FPTObject.cs" />
     <Compile Include="DataRepresentation\FPTQueryModel.cs" />
     <Compile Include="DataRepresentation\MatchCondition.cs" />
+    <Compile Include="Parsing\Constants.cs" />
     <Compile Include="Parsing\Tokens\FPTToken.cs" />
     <Compile Include="Parsing\Tokenizers\ITokenizer.cs" />
     <Compile Include="Parsing\Parser.cs" />
