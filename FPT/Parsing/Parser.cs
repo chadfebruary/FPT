@@ -8,7 +8,7 @@ namespace FPT.Parsing
     public class Parser
     {
         private Stack<FPTToken> _tokenSequence;
-        private FPTToken _lookAheadFirst;
+        private FPTToken lookAheadFirst;
         private FPTToken _lookAheadSecond;
 
         private FPTQueryModel _queryModel;
@@ -22,7 +22,7 @@ namespace FPT.Parsing
             PrepareLookAheads();
             _queryModel = new FPTQueryModel();
 
-            Match();
+            //Match();
 
             DiscardToken(TokenType.SequenceTerminator);
 
@@ -42,21 +42,21 @@ namespace FPT.Parsing
 
         private void PrepareLookAheads()
         {
-            _lookAheadFirst = _tokenSequence.Pop();
+            lookAheadFirst = _tokenSequence.Pop();
             _lookAheadSecond = _tokenSequence.Pop();
         }
 
         private FPTToken ReadToken(TokenType tokenType)
         {
-            if (_lookAheadFirst.tokenType != tokenType)
+            if (lookAheadFirst.tokenType != tokenType)
                 throw new System.Exception();
 
-            return _lookAheadFirst;
+            return lookAheadFirst;
         }
 
         private void DiscardToken()
         {
-            _lookAheadFirst = _lookAheadSecond.Clone();
+            lookAheadFirst = _lookAheadSecond.Clone();
 
             if (_tokenSequence.Any())
                 _lookAheadSecond = _tokenSequence.Pop();
@@ -66,16 +66,26 @@ namespace FPT.Parsing
 
         private void DiscardToken(TokenType tokenType)
         {
-            if (_lookAheadFirst.tokenType != tokenType)
+            if (lookAheadFirst.tokenType != tokenType)
                 throw new System.Exception();
 
             DiscardToken();
         }
 
-        private void Match()
+        private void Match(TokenType x)
         {
-            DiscardToken(TokenType.Match);
-            MatchCondition();
+            //DiscardToken(TokenType.Match);
+            //MatchCondition();
+
+            if (lookAheadFirst.tokenType == x)
+                Consume();
+            else
+                throw new Exception("Expected: " + lookAheadFirst.value + " Found: " + x.ToString());
+        }
+
+        public void Consume()
+        {
+            lookAheadFirst = _tokenSequence.Pop();
         }
 
         private void MatchCondition()
@@ -111,11 +121,11 @@ namespace FPT.Parsing
 
         private void EqualityMatchCondition()
         {
-            _currentMatchCondition.Object = GetObject(_lookAheadFirst);
+            _currentMatchCondition.Object = GetObject(lookAheadFirst);
             DiscardToken();
-            _currentMatchCondition.Operator = GetOperator(_lookAheadFirst);
+            _currentMatchCondition.Operator = GetOperator(lookAheadFirst);
             DiscardToken();
-            _currentMatchCondition.Value = _lookAheadFirst.value;
+            _currentMatchCondition.Value = lookAheadFirst.value;
             DiscardToken();
         }
 
@@ -173,7 +183,7 @@ namespace FPT.Parsing
         {
             _currentMatchCondition.Operator = inOperator;
             _currentMatchCondition.Values = new List<string>();
-            _currentMatchCondition.Object = GetObject(_lookAheadFirst);
+            _currentMatchCondition.Object = GetObject(lookAheadFirst);
             DiscardToken();
 
             if (inOperator == FPTOperator.In)
@@ -195,7 +205,7 @@ namespace FPT.Parsing
 
         private void StringLiteralListNext()
         {
-            if (_lookAheadFirst.tokenType == TokenType.Comma)
+            if (lookAheadFirst.tokenType == TokenType.Comma)
             {
                 DiscardToken(TokenType.Comma);
                 _currentMatchCondition.Values.Add(ReadToken(TokenType.StringValue).value);
@@ -206,9 +216,9 @@ namespace FPT.Parsing
 
         private void MatchConditionNext()
         {
-            if (_lookAheadFirst.tokenType == TokenType.And)
+            if (lookAheadFirst.tokenType == TokenType.And)
                 AndMatchCondition();
-            else if (_lookAheadFirst.tokenType == TokenType.Or)
+            else if (lookAheadFirst.tokenType == TokenType.Or)
                 OrMatchCondition();
             //else if (_lookAheadFirst.tokenType == TokenType.Between)
             //    DateCondition();

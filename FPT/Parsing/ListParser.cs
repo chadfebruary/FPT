@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FPT
+namespace FPT.Parsing
 {
-    class Program
+    public class ListParser : Parser
     {
-        static void Main(string[] args)
+        public ListParser() { }
+
+        public void List()
         {
-            Console.Read();
+
         }
     }
 }
