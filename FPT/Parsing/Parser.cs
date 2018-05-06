@@ -7,9 +7,9 @@ namespace FPT.Parsing
 {
     public class Parser
     {
-        private Stack<FPTToken> _tokenSequence;
+        private Stack<FPTToken> tokenSequence;
         private FPTToken lookAheadFirst;
-        private FPTToken _lookAheadSecond;
+        private FPTToken lookAheadSecond;
 
         private FPTQueryModel _queryModel;
         private MatchCondition _currentMatchCondition;
@@ -22,7 +22,7 @@ namespace FPT.Parsing
             PrepareLookAheads();
             _queryModel = new FPTQueryModel();
 
-            //Match();
+            Match();
 
             DiscardToken(TokenType.SequenceTerminator);
 
@@ -31,19 +31,19 @@ namespace FPT.Parsing
 
         private void LoadSequenceStack(List<FPTToken> tokens)
         {
-            _tokenSequence = new Stack<FPTToken>();
+            tokenSequence = new Stack<FPTToken>();
             int count = tokens.Count;
 
             for (int i = count - 1; i >= 0; i--)
             {
-                _tokenSequence.Push(tokens[i]);
+                tokenSequence.Push(tokens[i]);
             }
         }
 
         private void PrepareLookAheads()
         {
-            lookAheadFirst = _tokenSequence.Pop();
-            _lookAheadSecond = _tokenSequence.Pop();
+            lookAheadFirst = tokenSequence.Pop();
+            lookAheadSecond = tokenSequence.Pop();
         }
 
         private FPTToken ReadToken(TokenType tokenType)
@@ -56,12 +56,12 @@ namespace FPT.Parsing
 
         private void DiscardToken()
         {
-            lookAheadFirst = _lookAheadSecond.Clone();
+            lookAheadFirst = lookAheadSecond.Clone();
 
-            if (_tokenSequence.Any())
-                _lookAheadSecond = _tokenSequence.Pop();
+            if (tokenSequence.Any())
+                lookAheadSecond = tokenSequence.Pop();
             else
-                _lookAheadSecond = new FPTToken(TokenType.SequenceTerminator, string.Empty);
+                lookAheadSecond = new FPTToken(TokenType.SequenceTerminator, string.Empty);
         }
 
         private void DiscardToken(TokenType tokenType)
@@ -74,8 +74,8 @@ namespace FPT.Parsing
 
         private void Match(TokenType x)
         {
-            //DiscardToken(TokenType.Match);
-            //MatchCondition();
+            DiscardToken(TokenType.Match);
+            MatchCondition();
 
             if (lookAheadFirst.tokenType == x)
                 Consume();
@@ -85,7 +85,7 @@ namespace FPT.Parsing
 
         public void Consume()
         {
-            lookAheadFirst = _tokenSequence.Pop();
+            lookAheadFirst = tokenSequence.Pop();
         }
 
         private void MatchCondition()
@@ -94,18 +94,18 @@ namespace FPT.Parsing
 
             //if (IsObject(_lookAheadFirst))
             //{
-                if (IsEqualityOperator(_lookAheadSecond))
+                if (IsEqualityOperator(lookAheadSecond))
                 {
                     EqualityMatchCondition();
                 }
-                else if (_lookAheadSecond.tokenType == TokenType.In)
-                {
-                    InCondition();
-                }
-                else if (_lookAheadSecond.tokenType == TokenType.NotIn)
-                {
-                    NotInCondition();
-                }
+                //else if (lookAheadSecond.tokenType == TokenType.In)
+                //{
+                //    InCondition();
+                //}
+                //else if (lookAheadSecond.tokenType == TokenType.NotIn)
+                //{
+                //    NotInCondition();
+                //}
                 else
                 {
                     throw new System.Exception();
@@ -169,32 +169,32 @@ namespace FPT.Parsing
             }
         }
 
-        private void NotInCondition()
-        {
-            ParseInCondition(FPTOperator.NotIn);
-        }
+        //private void NotInCondition()
+        //{
+        //    ParseInCondition(FPTOperator.NotIn);
+        //}
 
-        private void InCondition()
-        {
-            ParseInCondition(FPTOperator.In);
-        }
+        //private void InCondition()
+        //{
+        //    ParseInCondition(FPTOperator.In);
+        //}
 
-        private void ParseInCondition(FPTOperator inOperator)
-        {
-            _currentMatchCondition.Operator = inOperator;
-            _currentMatchCondition.Values = new List<string>();
-            _currentMatchCondition.Object = GetObject(lookAheadFirst);
-            DiscardToken();
+        //private void ParseInCondition(FPTOperator inOperator)
+        //{
+        //    _currentMatchCondition.Operator = inOperator;
+        //    _currentMatchCondition.Values = new List<string>();
+        //    _currentMatchCondition.Object = GetObject(lookAheadFirst);
+        //    DiscardToken();
 
-            if (inOperator == FPTOperator.In)
-                DiscardToken(TokenType.In);
-            else if (inOperator == FPTOperator.NotIn)
-                DiscardToken(TokenType.NotIn);
+        //    if (inOperator == FPTOperator.In)
+        //        DiscardToken(TokenType.In);
+        //    else if (inOperator == FPTOperator.NotIn)
+        //        DiscardToken(TokenType.NotIn);
 
-            DiscardToken(TokenType.OpenParenthesis);
-            StringLiteralList();
-            DiscardToken(TokenType.CloseParenthesis);
-        }
+        //    DiscardToken(TokenType.OpenParenthesis);
+        //    StringLiteralList();
+        //    DiscardToken(TokenType.CloseParenthesis);
+        //}
 
         private void StringLiteralList()
         {
@@ -239,19 +239,6 @@ namespace FPT.Parsing
             DiscardToken(TokenType.Or);
             MatchCondition();
         }
-
-        //private void DateCondition()
-        //{
-        //    DiscardToken(TokenType.Between);
-
-        //    _queryModel.dateRange = new DateRange();
-        //    _queryModel.dateRange.from = DateTime.ParseExact();
-        //}
-
-        //private void DateConditionNext()
-        //{
-
-        //}
 
         private void Limit()
         {

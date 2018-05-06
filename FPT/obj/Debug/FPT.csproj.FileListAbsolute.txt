@@ -4,3 +4,5 @@ C:\FPT\FPT\bin\Debug\FPT.exe
 C:\FPT\FPT\bin\Debug\FPT.pdb
 C:\FPT\FPT\obj\Debug\FPT.exe
 C:\FPT\FPT\obj\Debug\FPT.pdb
+C:\FPT\FPT\bin\Debug\Antlr3.Runtime.dll
+C:\FPT\FPT\bin\Debug\Antlr3.Runtime.pdb
