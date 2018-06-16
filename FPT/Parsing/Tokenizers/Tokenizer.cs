@@ -8,16 +8,16 @@ namespace FPT.Parsing
 {
     public class Tokenizer : ITokenizer
     {
-        private List<TokenDefinition> _tokenDefinitions;
+        private List<TokenDefinition> tokenDefinitions;
 
         public Tokenizer()
         {
-            _tokenDefinitions = new List<TokenDefinition>();
+            tokenDefinitions = new List<TokenDefinition>();
 
-            _tokenDefinitions.Add(new TokenDefinition(TokenType.Add, "add", 1));
-            _tokenDefinitions.Add(new TokenDefinition(TokenType.Subtract, "subtract", 1));
-            _tokenDefinitions.Add(new TokenDefinition(TokenType.Multiply, "multiply", 1));
-            _tokenDefinitions.Add(new TokenDefinition(TokenType.Divide, "divide", 1));
+            tokenDefinitions.Add(new TokenDefinition(TokenType.Add, "+"));
+            tokenDefinitions.Add(new TokenDefinition(TokenType.Subtract, "-"));
+            tokenDefinitions.Add(new TokenDefinition(TokenType.Multiply, "*"));
+            tokenDefinitions.Add(new TokenDefinition(TokenType.Divide, "/"));
         }
         public IEnumerable<FPTToken> Tokenize(string errorMessage)
         {
@@ -44,7 +44,7 @@ namespace FPT.Parsing
         {
             var tokenMatches = new List<TokenMatch>();
 
-            foreach (var tokenDefiniton in _tokenDefinitions)
+            foreach (var tokenDefiniton in tokenDefinitions)
                 tokenMatches.AddRange(tokenDefiniton.FindMatches(errorMessage).ToList());
 
             return tokenMatches;

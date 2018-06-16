@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FPT.Parsing;
 
 namespace FPT
 {
@@ -10,7 +7,26 @@ namespace FPT
     {
         static void Main(string[] args)
         {
-            Console.Read();
+            Program run = new Program();
+
+            run.Run();
+        }
+
+        public void Run()
+        {
+            while (true)
+            {
+                Console.WriteLine("Press 1 to test parser.");
+                var input = Console.ReadKey();
+
+                switch (input.KeyChar)
+                {
+                    case '1':
+                        ITokenizer tokenizer = new Tokenizer();
+                        break;
+                    default: break;
+                }
+            }
         }
     }
 }

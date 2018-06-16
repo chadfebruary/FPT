@@ -11,8 +11,8 @@ namespace FPT.Parsing
         private FPTToken lookAheadFirst;
         private FPTToken lookAheadSecond;
 
-        private FPTQueryModel _queryModel;
-        private MatchCondition _currentMatchCondition;
+        private FPTQueryModel queryModel;
+        private MatchCondition currentMatchCondition;
 
         private const string expectedObjectErrorText = "Expected =, !=, LIKE, NOT LIKE, IN or NOT IN but found: ";
 
@@ -20,13 +20,13 @@ namespace FPT.Parsing
         {
             LoadSequenceStack(tokens);
             PrepareLookAheads();
-            _queryModel = new FPTQueryModel();
+            queryModel = new FPTQueryModel();
 
             Match();
 
             DiscardToken(TokenType.SequenceTerminator);
 
-            return _queryModel;
+            return queryModel;
         }
 
         private void LoadSequenceStack(List<FPTToken> tokens)
@@ -70,6 +70,12 @@ namespace FPT.Parsing
                 throw new System.Exception();
 
             DiscardToken();
+        }
+
+        private void Match()
+        {
+            DiscardToken(TokenType.Match);
+            MatchCondition();
         }
 
         private void Match(TokenType x)
@@ -121,11 +127,11 @@ namespace FPT.Parsing
 
         private void EqualityMatchCondition()
         {
-            _currentMatchCondition.Object = GetObject(lookAheadFirst);
+            currentMatchCondition.Object = GetObject(lookAheadFirst);
             DiscardToken();
-            _currentMatchCondition.Operator = GetOperator(lookAheadFirst);
+            currentMatchCondition.Operator = GetOperator(lookAheadFirst);
             DiscardToken();
-            _currentMatchCondition.Value = lookAheadFirst.value;
+            currentMatchCondition.Value = lookAheadFirst.value;
             DiscardToken();
         }
 
@@ -156,14 +162,14 @@ namespace FPT.Parsing
                     return FPTOperator.Equals;
                 case TokenType.NotEquals:
                     return FPTOperator.NotEquals;
-                case TokenType.Like:
-                    return FPTOperator.Like;
-                case TokenType.NotLike:
-                    return FPTOperator.NotLike;
-                case TokenType.In:
-                    return FPTOperator.In;
-                case TokenType.NotIn:
-                    return FPTOperator.NotIn;
+                //case TokenType.Like:
+                //    return FPTOperator.Like;
+                //case TokenType.NotLike:
+                //    return FPTOperator.NotLike;
+                //case TokenType.In:
+                //    return FPTOperator.In;
+                //case TokenType.NotIn:
+                //    return FPTOperator.NotIn;
                 default:
                     throw new System.Exception();
             }
@@ -198,7 +204,7 @@ namespace FPT.Parsing
 
         private void StringLiteralList()
         {
-            _currentMatchCondition.Values.Add(ReadToken(TokenType.StringValue).value);
+            currentMatchCondition.Values.Add(ReadToken(TokenType.StringValue).value);
             DiscardToken(TokenType.StringValue);
             StringLiteralListNext();
         }
@@ -208,7 +214,7 @@ namespace FPT.Parsing
             if (lookAheadFirst.tokenType == TokenType.Comma)
             {
                 DiscardToken(TokenType.Comma);
-                _currentMatchCondition.Values.Add(ReadToken(TokenType.StringValue).value);
+                currentMatchCondition.Values.Add(ReadToken(TokenType.StringValue).value);
                 DiscardToken(TokenType.StringValue);
                 StringLiteralListNext();
             }
@@ -228,40 +234,40 @@ namespace FPT.Parsing
 
         private void AndMatchCondition()
         {
-            _currentMatchCondition.LogOpToNextCondition = FPTLogicalOperator.And;
+            currentMatchCondition.LogOpToNextCondition = FPTLogicalOperator.And;
             DiscardToken(TokenType.And);
             MatchCondition();
         }
 
         private void OrMatchCondition()
         {
-            _currentMatchCondition.LogOpToNextCondition = FPTLogicalOperator.Or;
+            currentMatchCondition.LogOpToNextCondition = FPTLogicalOperator.Or;
             DiscardToken(TokenType.Or);
             MatchCondition();
         }
 
-        private void Limit()
-        {
-            DiscardToken(TokenType.Limit);
-            int limit = 0;
-            bool success = int.TryParse(ReadToken(TokenType.Number).value, out limit);
-
-            if (success)
-                _queryModel.limit = limit;
-            else
-                throw new Exception();
-
-            DiscardToken(TokenType.Number);
-        }
-
-        //private bool IsObject(FPTToken token)
+        //private void Limit()
         //{
-        //    return token.tokenType == TokenType.Application
-        //        || token.tokenType == TokenType.ExceptionType
-        //        || token.tokenType == TokenType.FingerPrint
-        //        || token.tokenType == TokenType.Message
-        //        || token.tokenType == TokenType.StackFrame;
+        //    DiscardToken(TokenType.Limit);
+        //    int limit = 0;
+        //    bool success = int.TryParse(ReadToken(TokenType.Number).value, out limit);
+
+        //    if (success)
+        //        queryModel.limit = limit;
+        //    else
+        //        throw new Exception();
+
+        //    DiscardToken(TokenType.Number);
         //}
+
+        private bool IsObject(FPTToken token)
+        {
+            return token.tokenType == TokenType.Application
+                || token.tokenType == TokenType.ExceptionType
+                || token.tokenType == TokenType.FingerPrint
+                || token.tokenType == TokenType.Message
+                || token.tokenType == TokenType.StackFrame;
+        }
 
         private bool IsEqualityOperator(FPTToken token)
         {
@@ -273,8 +279,8 @@ namespace FPT.Parsing
 
         private void CreateNewMatchCondition()
         {
-            _currentMatchCondition = new DataRepresentation.MatchCondition();
-            _queryModel.matchConditions.Add(_currentMatchCondition);
+            currentMatchCondition = new DataRepresentation.MatchCondition();
+            queryModel.matchConditions.Add(currentMatchCondition);
         }
     }
 
@@ -282,10 +288,10 @@ namespace FPT.Parsing
     {
         Equals,
         NotEquals,
-        Like,
-        NotLike,
-        In,
-        NotIn
+        //Like,
+        //NotLike,
+        //In,
+        //NotIn
     }
 
     public enum FPTLogicalOperator

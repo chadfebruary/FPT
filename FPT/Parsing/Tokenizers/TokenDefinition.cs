@@ -9,28 +9,25 @@ namespace FPT.Parsing
 {
     public class TokenDefinition
     {
-        private Regex _regex;
-        private readonly TokenType _returnsToken;
-        private readonly int _precedence;
+        private Regex regex;
+        private readonly TokenType returnsToken;
 
-        public TokenDefinition(TokenType returnsToken, string regexPattern, int precedence)
+        public TokenDefinition(TokenType returnsToken, string regexPattern)
         {
-            _regex = new Regex(regexPattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
-            _returnsToken = returnsToken;
-            _precedence = precedence;
+            regex = new Regex(regexPattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+            this.returnsToken = returnsToken;
         }
         public IEnumerable<TokenMatch> FindMatches(string inputString)
         {
-            var matches = _regex.Matches(inputString);
+            var matches = regex.Matches(inputString);
             for (int i = 0; i < matches.Count; i++)
             {
                 yield return new TokenMatch()
                 {
                     StartIndex = matches[i].Index,
                     EndIndex = matches[i].Index + matches[i].Length,
-                    TokenType = _returnsToken,
-                    Value = matches[i].Value,
-                    Precedence = _precedence
+                    TokenType = returnsToken,
+                    Value = matches[i].Value
                 };
             }
         }
