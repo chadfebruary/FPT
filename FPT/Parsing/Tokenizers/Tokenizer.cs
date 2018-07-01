@@ -14,10 +14,10 @@ namespace FPT.Parsing
         {
             tokenDefinitions = new List<TokenDefinition>();
 
-            tokenDefinitions.Add(new TokenDefinition(TokenType.Add, "+"));
-            tokenDefinitions.Add(new TokenDefinition(TokenType.Subtract, "-"));
-            tokenDefinitions.Add(new TokenDefinition(TokenType.Multiply, "*"));
-            tokenDefinitions.Add(new TokenDefinition(TokenType.Divide, "/"));
+            tokenDefinitions.Add(new TokenDefinition(TokenType.Add, ".+"));
+            tokenDefinitions.Add(new TokenDefinition(TokenType.Subtract, ".-"));
+            tokenDefinitions.Add(new TokenDefinition(TokenType.Multiply, ".*"));
+            tokenDefinitions.Add(new TokenDefinition(TokenType.Divide, "./"));
         }
         public IEnumerable<FPTToken> Tokenize(string errorMessage)
         {

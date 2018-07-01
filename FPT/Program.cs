@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FPT.Parsing;
 
 namespace FPT
@@ -22,7 +23,13 @@ namespace FPT
                 switch (input.KeyChar)
                 {
                     case '1':
-                        ITokenizer tokenizer = new Tokenizer();
+                        //ITokenizer tokenizer = new Tokenizer();
+                        Parser parser = new Parser();
+                        List<FPTToken> tokens = new List<FPTToken>();
+                        tokens.Add(new FPTToken(TokenType.Match, "fuck knows"));
+                        tokens.Add(new FPTToken(TokenType.Add, "+"));
+                        tokens.Add(new FPTToken(TokenType.Subtract, "-"));
+                        parser.Parse(tokens);
                         break;
                     default: break;
                 }

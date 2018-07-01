@@ -104,14 +104,10 @@ namespace FPT.Parsing
                 {
                     EqualityMatchCondition();
                 }
-                //else if (lookAheadSecond.tokenType == TokenType.In)
-                //{
-                //    InCondition();
-                //}
-                //else if (lookAheadSecond.tokenType == TokenType.NotIn)
-                //{
-                //    NotInCondition();
-                //}
+                else if (IsMathOperator(lookAheadSecond))
+                {
+                    //InCondition();
+                }
                 else
                 {
                     throw new System.Exception();
@@ -162,6 +158,14 @@ namespace FPT.Parsing
                     return FPTOperator.Equals;
                 case TokenType.NotEquals:
                     return FPTOperator.NotEquals;
+                case TokenType.Add:
+                    return FPTOperator.Add;
+                case TokenType.Subtract:
+                    return FPTOperator.Subtract;
+                case TokenType.Multiply:
+                    return FPTOperator.Multiply;
+                case TokenType.Divide:
+                    return FPTOperator.Divide;
                 //case TokenType.Like:
                 //    return FPTOperator.Like;
                 //case TokenType.NotLike:
@@ -272,9 +276,15 @@ namespace FPT.Parsing
         private bool IsEqualityOperator(FPTToken token)
         {
             return token.tokenType == TokenType.Equals
-                || token.tokenType == TokenType.NotEquals
-                || token.tokenType == TokenType.Like
-                || token.tokenType == TokenType.NotLike;
+                || token.tokenType == TokenType.NotEquals;
+        }
+
+        private bool IsMathOperator(FPTToken token)
+        {
+            return token.tokenType == TokenType.Add
+                || token.tokenType == TokenType.Subtract
+                || token.tokenType == TokenType.Multiply
+                || token.tokenType == TokenType.Divide;
         }
 
         private void CreateNewMatchCondition()
@@ -288,10 +298,10 @@ namespace FPT.Parsing
     {
         Equals,
         NotEquals,
-        //Like,
-        //NotLike,
-        //In,
-        //NotIn
+        Add,
+        Subtract,
+        Multiply,
+        Divide
     }
 
     public enum FPTLogicalOperator
