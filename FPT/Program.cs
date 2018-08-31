@@ -26,10 +26,16 @@ namespace FPT
                         //ITokenizer tokenizer = new Tokenizer();
                         Parser parser = new Parser();
                         List<FPTToken> tokens = new List<FPTToken>();
-                        tokens.Add(new FPTToken(TokenType.Match, "fuck knows"));
+                        tokens.Add(new FPTToken(TokenType.Match, "1"));
                         tokens.Add(new FPTToken(TokenType.Add, "+"));
-                        tokens.Add(new FPTToken(TokenType.Subtract, "-"));
-                        parser.Parse(tokens);
+                        tokens.Add(new FPTToken(TokenType.Subtract, "1"));
+
+                        Console.WriteLine("Enter code homie:");
+                        string userInput = Console.ReadLine();
+                        //string[] userInputList = userInput.Split(null);
+
+                        //parser.Parse(tokens);
+                        parser.MathParse(userInput);
                         break;
                     default: break;
                 }

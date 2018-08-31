@@ -6,3 +6,5 @@ C:\FPT\FPT\obj\Debug\FPT.exe
 C:\FPT\FPT\obj\Debug\FPT.pdb
 C:\FPT\FPT\bin\Debug\Antlr3.Runtime.dll
 C:\FPT\FPT\bin\Debug\Antlr3.Runtime.pdb
+C:\FPT\FPT\bin\Debug\Sprache.dll
+C:\FPT\FPT\bin\Debug\Sprache.xml

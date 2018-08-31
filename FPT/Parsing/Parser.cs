@@ -16,6 +16,9 @@ namespace FPT.Parsing
 
         private const string expectedObjectErrorText = "Expected =, !=, LIKE, NOT LIKE, IN or NOT IN but found: ";
 
+        private Dictionary<string, int> mathOperators = new Dictionary<string, int>() { { "+", 1 }, { "-", 2 }, { "*", 3 }, { "/", 4 } };
+        private Dictionary<string, int> invalidPreceedingOperators = new Dictionary<string, int>() { { "%", 9 }, { "|", 6 }, { "&", 8 }, { ">>", 7 }, { "<<", 6 }, { "+", 4 }, { "/", 3 }, { "*", 2 }, { "^", 1 } };
+
         public FPTQueryModel Parse(List<FPTToken> tokens)
         {
             LoadSequenceStack(tokens);
@@ -27,6 +30,95 @@ namespace FPT.Parsing
             DiscardToken(TokenType.SequenceTerminator);
 
             return queryModel;
+        }
+
+        public string MathParse(string code)
+        {
+            if (string.IsNullOrEmpty(code))
+                return "No code found.";
+
+            code.Trim();
+
+            int startPosition = 0;
+            int parenthesis = 0;
+
+            if (code[0] == '-')
+                startPosition++;
+
+            int lastValidChar = -1;
+
+            int operatorValue;
+            int lowestOperator = -1;
+            int operatorPosition = -1;
+            int operatorLength = 0;
+            string symbol;
+
+            for (int i = code.Length - 1; i >= startPosition; i--)
+            {
+                char temp = code[i];
+
+                if (code[i] == ')')
+                {
+                    lastValidChar = i;
+                    parenthesis++;
+                }
+                else if (code[i] == '(')
+                {
+                    lastValidChar = i;
+                    parenthesis--;
+                }
+
+                if (parenthesis < 0)
+                {
+                    return "Format error.";
+                }
+
+                string searchItem = code[i].ToString();
+
+                //Change to <
+                if (searchItem == "<" || searchItem == ">")
+                {
+                    searchItem = string.Concat(code[i - 1].ToString(), code[i].ToString());
+                    i--;
+                }
+
+                if (!mathOperators.ContainsKey(searchItem))
+                {
+                    if (!Char.IsWhiteSpace(code[i]))
+                    {
+                        lastValidChar = i;
+                    }
+                    continue;
+                }
+
+                if (invalidPreceedingOperators.ContainsKey(searchItem) && mathOperators.ContainsKey(code[i - 1].ToString()))
+                    return "Invalid operator.";
+
+                operatorValue = mathOperators[searchItem];
+
+                if ((parenthesis != 0 || lowestOperator >= operatorValue) && code[i + 1] != '-')
+                    continue;
+
+                lowestOperator = operatorValue;
+                operatorPosition = i;
+                operatorLength = searchItem.Length - 1;
+                symbol = searchItem;
+            }
+
+            if (parenthesis != 0)
+                return "Invalid expression.";
+
+            if (operatorPosition == -1)
+            {
+                decimal d;
+
+                if ((code[0] != '0' || code.Length == 1 || code[1] == '0' || code[1] == '.') && decimal.TryParse(code.Trim(), out d))
+                {
+
+                }
+            }
+
+            return "";
         }
 
         private void LoadSequenceStack(List<FPTToken> tokens)
@@ -226,27 +318,27 @@ namespace FPT.Parsing
 
         private void MatchConditionNext()
         {
-            if (lookAheadFirst.tokenType == TokenType.And)
-                AndMatchCondition();
-            else if (lookAheadFirst.tokenType == TokenType.Or)
-                OrMatchCondition();
+            if (lookAheadFirst.tokenType == TokenType.Add)
+                AddMatchCondition();
+            else if (lookAheadFirst.tokenType == TokenType.Subtract)
+                SubtractMatchCondition();
             //else if (_lookAheadFirst.tokenType == TokenType.Between)
             //    DateCondition();
             else
                 throw new System.Exception();
         }
 
-        private void AndMatchCondition()
+        private void AddMatchCondition()
         {
-            currentMatchCondition.LogOpToNextCondition = FPTLogicalOperator.And;
-            DiscardToken(TokenType.And);
+            currentMatchCondition.LogOpToNextCondition = FPTLogicalOperator.Add;
+            DiscardToken(TokenType.Add);
             MatchCondition();
         }
 
-        private void OrMatchCondition()
+        private void SubtractMatchCondition()
         {
-            currentMatchCondition.LogOpToNextCondition = FPTLogicalOperator.Or;
-            DiscardToken(TokenType.Or);
+            currentMatchCondition.LogOpToNextCondition = FPTLogicalOperator.Subtract;
+            DiscardToken(TokenType.Subtract);
             MatchCondition();
         }
 
@@ -307,6 +399,8 @@ namespace FPT.Parsing
     public enum FPTLogicalOperator
     {
         And,
-        Or
+        Or,
+        Add,
+        Subtract
     }
 }
