@@ -62,7 +62,10 @@
       <DependentUpon>FPTGrammar.g4</DependentUpon>
     </Compile>
     <Compile Include="Parsing\Constants.cs" />
+    <Compile Include="Parsing\IMathNode.cs" />
     <Compile Include="Parsing\ListParser.cs" />
+    <Compile Include="Parsing\NumericMathNode.cs" />
+    <Compile Include="Parsing\OperatorFactory.cs" />
     <Compile Include="Parsing\Tokens\FPTToken.cs" />
     <Compile Include="Parsing\Tokenizers\ITokenizer.cs" />
     <Compile Include="Parsing\Parser.cs" />
@@ -70,6 +73,11 @@
     <Compile Include="Parsing\Tokenizers\Tokenizer.cs" />
     <Compile Include="Parsing\Tokenizers\TokenMatch.cs" />
     <Compile Include="Parsing\Tokens\TokenType.cs" />
+    <Compile Include="Parsing\UniLeafFactory.cs" />
+    <Compile Include="Parsing\UniLeafMathNode.cs" />
+    <Compile Include="Parsing\UnitConverter.cs" />
+    <Compile Include="Parsing\UnitDouble.cs" />
+    <Compile Include="Parsing\UnitFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

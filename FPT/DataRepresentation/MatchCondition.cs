@@ -10,9 +10,9 @@ namespace FPT.DataRepresentation
     public class MatchCondition
     {
         public FPTObject Object { get; set; }
-        public FPTOperator Operator { get; set; }
+        //public FPTOperator Operator { get; set; }
         public string Value { get; set; }
         public List<string> Values { get; set; }
-        public FPTLogicalOperator LogOpToNextCondition { get; set; }
+        //public FPTLogicalOperator LogOpToNextCondition { get; set; }
     }
 }
