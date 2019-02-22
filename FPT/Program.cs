@@ -17,28 +17,19 @@ namespace FPT
         {
             while (true)
             {
-                Console.WriteLine("Press 1 to test parser.");
-                var input = Console.ReadKey();
+                //ITokenizer tokenizer = new Tokenizer();
+                Parser parser = new Parser();
+                List<FPTToken> tokens = new List<FPTToken>();
 
-                switch (input.KeyChar)
-                {
-                    case '1':
-                        //ITokenizer tokenizer = new Tokenizer();
-                        Parser parser = new Parser();
-                        List<FPTToken> tokens = new List<FPTToken>();
-                        tokens.Add(new FPTToken(TokenType.Match, "1"));
-                        tokens.Add(new FPTToken(TokenType.Add, "+"));
-                        tokens.Add(new FPTToken(TokenType.Subtract, "1"));
+                Console.WriteLine("Enter code homie:");
+                string userInput = Console.ReadLine();
+                var found = userInput.Contains("plus");
 
-                        Console.WriteLine("Enter code homie:");
-                        string userInput = Console.ReadLine();
-                        //string[] userInputList = userInput.Split(null);
 
-                        //parser.Parse(tokens);
-                        parser.MathParse(userInput);
-                        break;
-                    default: break;
-                }
+
+                IMathNode result = parser.MathParse(userInput);
+                Console.WriteLine(result.Evaluate());
+
             }
         }
     }

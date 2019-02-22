@@ -49,6 +49,15 @@ namespace FPT.Parsing
 
             code.Trim();
 
+            code = code.Replace("plus", "+");
+            code = code.Replace("kunye", "+");
+            code = code.Replace("minus", "-");
+            code = code.Replace("nciphisa", "-");
+            code = code.Replace("multiply", "*");
+            code = code.Replace("phinda", "*");
+            code = code.Replace("divide", "/");
+            code = code.Replace("ukwahlula", "/");
+
             int startPosition = 0;
             int parenthesis = 0;
 
